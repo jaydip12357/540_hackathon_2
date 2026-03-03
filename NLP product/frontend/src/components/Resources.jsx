@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { getResources } from '../api'
+import { ExternalLink, Phone, BookOpen, Heart } from 'lucide-react'
+
+const SECTION_ICONS = {
+  crisis: Phone,
+  self_help: Heart,
+  education: BookOpen,
+}
 
 const SECTION_LABELS = {
-  crisis:    'Crisis Support',
+  crisis: 'Emergency Support & Hotlines',
   self_help: 'Self-Help Resources',
-  education: 'Educational',
+  education: 'Educational Content',
 }
 
 export default function Resources() {
@@ -34,36 +41,56 @@ export default function Resources() {
   const resources = data || staticData
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', lineHeight: 1.7 }}>
-        If you or someone you know is experiencing verbal abuse, gaslighting, or emotional harm — help is available.
-      </p>
-      {Object.entries(resources).map(([section, items]) => (
-        <div key={section}>
-          <h3 style={{ fontWeight: 600, marginBottom: '10px', fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
-            {SECTION_LABELS[section]}
-          </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            {items.map((item, i) => (
-              <a key={i} href={item.url} target="_blank" rel="noopener noreferrer"
-                style={{
-                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  background: 'var(--bg3)', border: '1px solid var(--border)',
-                  borderRadius: '6px', padding: '12px 16px', textDecoration: 'none',
-                }}
-                onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--text-muted)'}
-                onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
-              >
-                <div>
-                  <p style={{ color: 'var(--text)', fontWeight: 600, fontSize: '0.88rem', marginBottom: '2px' }}>{item.name}</p>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>{item.detail}</p>
-                </div>
-                <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem', flexShrink: 0 }}>-&gt;</span>
-              </a>
-            ))}
-          </div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+      <div>
+        <h1 style={{ fontSize: '2rem', marginBottom: '16px' }}>Resource Library</h1>
+        <div style={{ background: 'rgba(233, 69, 96, 0.1)', borderLeft: '4px solid var(--accent-coral)', padding: '16px', borderRadius: '4px', maxWidth: '800px' }}>
+          <p style={{ color: 'var(--text-main)', fontSize: '0.95rem', lineHeight: 1.6 }}>
+            <strong style={{ color: 'var(--accent-coral)' }}>If you are in immediate danger, please call 911 or your local emergency services.</strong><br />
+            Gaslight Guard is an AI tool and not a replacement for professional mental health support. If you or someone you know is experiencing verbal abuse, gaslighting, or emotional harm, help is available.
+          </p>
         </div>
-      ))}
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px' }}>
+        {Object.entries(resources).map(([section, items]) => {
+          const Icon = SECTION_ICONS[section] || BookOpen;
+          return (
+            <div key={section} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <h3 style={{
+                display: 'flex', alignItems: 'center', gap: '10px',
+                fontWeight: 700, fontSize: '1rem', color: 'var(--text-main)',
+                borderBottom: '1px solid var(--border)', paddingBottom: '12px'
+              }}>
+                <Icon size={20} color={section === 'crisis' ? 'var(--accent-coral)' : 'var(--accent-teal)'} />
+                {SECTION_LABELS[section]}
+              </h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {items.map((item, i) => (
+                  <a key={i} href={item.url} target="_blank" rel="noopener noreferrer"
+                    className="card-shadow-hover"
+                    style={{
+                      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                      background: 'var(--bg-card)', border: '1px solid var(--border)',
+                      borderRadius: 'var(--radius-card)', padding: '16px 20px', textDecoration: 'none',
+                      transition: 'all 0.2s',
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--text-muted)'; e.currentTarget.style.background = 'var(--bg-hover)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'var(--bg-card)'; }}
+                  >
+                    <div>
+                      <p style={{ color: 'var(--text-main)', fontWeight: 600, fontSize: '1rem', marginBottom: '6px' }}>{item.name}</p>
+                      <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{item.detail}</p>
+                    </div>
+                    <ExternalLink size={18} color="var(--text-muted)" style={{ flexShrink: 0, opacity: 0.7 }} />
+                  </a>
+                ))}
+              </div>
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }
+

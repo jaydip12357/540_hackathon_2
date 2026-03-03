@@ -1,0 +1,423 @@
+
+PRODUCT REQUIREMENTS DOCUMENT
+Gaslight Guard
+Sarcasm Detection & Mental Support Platform
+Empowering students to recognize veiled verbal abuse
+
+Version 1.0  |  March 2026
+Author: Jaideep
+Classification: Confidential
+
+1. Executive Summary
+Gaslight Guard is an AI-powered web platform that detects hidden verbal abuse patterns—sarcasm, passive-aggression, and gaslighting—in text conversations. Unlike standard sentiment analysis tools that misclassify polite-sounding toxic messages as positive, Gaslight Guard uses a fine-tuned RoBERTa model to perform multi-label classification across four categories: Sincere, Sarcastic, Passive-Aggressive, and Gaslighting.
+The platform serves college students and young adults who experience subtle forms of verbal manipulation in relationships, friendships, academic environments, and online interactions. Beyond detection, it provides a Sanity Check validation system, suggested response templates, pattern tracking over time, and curated mental health resources.
+
+Attribute
+Detail
+Product Name
+Gaslight Guard
+Tagline
+See Through the Words. Trust Your Reality.
+Target Users
+College students & young adults (18–28)
+Platform
+Responsive Web Application (Desktop + Mobile)
+Tech Stack
+React + Vite (Frontend), Render API (Model), Supabase (Auth/DB), Railway (Hosting)
+NLP Model
+RoBERTa-base, fine-tuned for multi-label classification
+Primary Dataset
+SARC (Reddit Sarcasm) + Cyberbullying Classification
+Timeline
+Hackathon Sprint (48–72 hours)
+
+2. Problem Statement
+2.1 The Hidden Epidemic
+Verbal abuse that hides behind politeness is one of the most psychologically damaging forms of manipulation. Victims often cannot articulate what feels wrong because the words seem normal on the surface. This phenomenon—commonly known as gaslighting—causes victims to doubt their own perception of reality.
+2.2 Why Standard NLP Fails
+Traditional sentiment analysis models evaluate text at surface level. A message like “Oh, you’re so smart for figuring that out all by yourself” would be classified as positive by most models due to words like “smart” and “figuring out.” In reality, this is a condescending, sarcastic remark designed to undermine confidence.
+2.3 Target User Pain Points
+	•	Students in toxic relationships who are told they are “overly sensitive”
+	•	Individuals experiencing workplace/academic passive-aggression from authority figures
+	•	People in manipulative friendships where backhanded compliments are the norm
+	•	Anyone who needs an objective, AI-powered second opinion on whether communication is healthy
+
+3. Product Vision & Strategy
+Gaslight Guard is not just a classifier—it is a digital mental health companion that validates the user’s lived experience. The product vision centers on three pillars:
+Pillar
+Description
+User Value
+Detect
+Multi-label NLP classification of hidden toxicity in text
+Users get objective analysis of suspicious messages
+Validate
+Sanity Check system that contextualizes patterns over time
+Users feel heard and reassured they are not overreacting
+Support
+Curated coping strategies, response templates, and resource links
+Users receive actionable next steps and professional help paths
+
+4. Technical Architecture
+4.1 System Overview
+The system follows a modern three-tier architecture optimized for hackathon speed without sacrificing production-grade quality.
+Layer
+Technology
+Purpose
+Frontend
+React + Vite + TailwindCSS
+Responsive SPA with polished UI/UX
+Hosting
+Railway
+Zero-config deployment with auto-scaling
+API / Model
+Render (OnRender)
+Hosts the fine-tuned RoBERTa inference endpoint
+Database
+Supabase (PostgreSQL)
+Auth, user profiles, conversation history, analytics
+Auth
+Supabase Auth
+Email/password + OAuth (Google) sign-in
+Storage
+Supabase Storage
+Screenshot uploads for image-based analysis
+Real-time
+Supabase Realtime
+Live updates for conversation analysis sessions
+
+4.2 API Endpoint Design
+The Render-hosted model API should expose the following RESTful endpoints:
+Method
+Endpoint
+Description
+POST
+/api/v1/analyze
+Single message classification (returns label + confidence scores)
+POST
+/api/v1/analyze-batch
+Batch analysis of conversation thread (5–20 messages)
+POST
+/api/v1/pattern-detect
+Multi-message gaslighting pattern detection (sliding window)
+GET
+/api/v1/health
+Model health check and latency monitoring
+
+4.3 Model Specification
+Base Model: RoBERTa-base (125M parameters)
+Task: Multi-label text classification
+Labels: Sincere, Sarcastic, Passive-Aggressive, Gaslighting
+Training Data: SARC (Self-Annotated Reddit Corpus) + Cyberbullying Classification dataset
+Inference: REST API hosted on Render with <500ms target latency
+
+4.4 Database Schema (Supabase)
+The following core tables should be created in Supabase:
+Table
+Key Columns
+Purpose
+users
+id, email, display_name, avatar_url, created_at
+User profiles via Supabase Auth
+conversations
+id, user_id, title, created_at, updated_at
+Groups of analyzed messages
+messages
+id, conversation_id, text, label, confidence, analyzed_at
+Individual analyzed messages with model output
+patterns
+id, conversation_id, pattern_type, severity, description
+Detected multi-message abuse patterns
+journal_entries
+id, user_id, mood, content, created_at
+Optional mood journaling for self-reflection
+saved_resources
+id, user_id, resource_id, saved_at
+Bookmarked mental health resources
+
+5. Pages & Feature Specification
+5.1 Landing Page (Public)
+The landing page is the first impression and must communicate trust, empathy, and technical sophistication simultaneously. It should feel like a safe space—not a clinical tool.
+5.1.1 Hero Section
+	•	Headline: “See Through the Words. Trust Your Reality.”
+	•	Subheadline explaining the AI detection capabilities
+	•	Interactive demo: A live text input where visitors can paste a message and get instant classification (no sign-up required)
+	•	Animated gradient background with subtle particle effects
+5.1.2 How It Works Section
+	•	Three-step visual flow: Paste → Analyze → Understand
+	•	Animated cards that flip to reveal classification categories
+	•	Micro-animations on scroll for engagement
+5.1.3 Social Proof / Statistics
+	•	Counter animations with research-backed statistics on gaslighting prevalence
+	•	Research citations from psychology journals
+	•	Anonymized testimonial carousel
+5.1.4 Features Grid
+	•	6 feature cards: Text Analysis, Conversation Scanner, Pattern Detection, Sanity Check, Response Suggestions, Resource Library
+	•	Hover effects with depth/shadow transitions
+5.1.5 CTA & Footer
+	•	Primary CTA: “Start Your Sanity Check”
+	•	Secondary CTA: “Learn About the Science”
+	•	Footer with About, Privacy Policy, Resources, Contact, GitHub
+
+5.2 Authentication Pages
+	•	Sign Up: Email/password + Google OAuth via Supabase Auth
+	•	Sign In: Toggle between sign-up/sign-in on same page
+	•	Password Reset: Magic link via Supabase email
+	•	Onboarding: 3-step guided tour after first sign-up (skippable)
+
+5.3 Dashboard (Authenticated Home)
+The dashboard is the user’s command center—a personalized overview of their analysis history, patterns, and wellbeing.
+5.3.1 Welcome Card
+	•	Personalized greeting with name and date
+	•	Quick-action buttons: New Analysis, View History, Resources
+	•	Daily affirmation or mental health tip
+5.3.2 Recent Analyses Widget
+	•	Last 5 analyses with color-coded label badges
+	•	Click-through to full analysis detail
+5.3.3 Pattern Tracker
+	•	Visual timeline/chart of toxicity patterns (7/30/90 days)
+	•	Trend indicators: Improving, Stable, or Concerning
+	•	Built with Recharts for animated data visualization
+5.3.4 Mood Check-In
+	•	Emoji-based mood logger (5 states)
+	•	Correlates mood data with analysis results
+
+5.4 Analysis Page (Core Feature)
+This is the heart of the product. The analysis page must feel powerful yet approachable—like talking to a trusted, intelligent friend.
+5.4.1 Input Methods
+	•	Text Input: Large textarea with character count and placeholder examples
+	•	Conversation Mode: Multi-message input for entire threads
+	•	Screenshot Upload: Drag-and-drop with OCR text extraction
+5.4.2 Real-Time Analysis Display
+	•	Animated loading state with shield icon
+	•	Results card: Primary label, confidence score, secondary labels
+	•	Sentence-by-sentence breakdown with inline highlighting in conversation mode
+5.4.3 Sanity Check Module
+The differentiating feature. After classification, the system generates human-readable validation:
+	•	Gaslighting: “This follows a pattern of reality distortion. You are not being overly sensitive.”
+	•	Passive-Aggressive: “While this sounds polite, the underlying tone carries hostility.”
+	•	Sarcastic: “This uses sarcasm to deliver a negative message with plausible deniability.”
+	•	Sincere: “This message appears genuine. No hidden toxicity detected.”
+5.4.4 Suggested Responses
+	•	Assertive: Sets a clear boundary
+	•	De-escalation: Neutral redirect
+	•	Disengage: Safe exit strategy
+	•	Each template is copy-able with a single click
+
+5.5 Conversation History Page
+	•	Paginated list of all past analyses, sorted by date
+	•	Filter by classification label
+	•	Search by keyword across analyzed messages
+	•	Bulk delete functionality
+	•	Export as PDF report (for therapy sessions or documentation)
+
+5.6 Pattern Insights Page
+A dedicated analytics page surfacing long-term behavioral patterns.
+	•	Toxicity Heatmap: Calendar view showing severity by day/week
+	•	Relationship Tracker: Per-person toxicity trends (if messages are tagged by sender)
+	•	Gaslighting Score: Aggregate 0–100 score based on frequency, severity, and consistency
+	•	Contextual Consistency Report: 5-sentence sliding window analysis
+	•	Exportable summary with charts for therapists/counselors
+
+5.7 Resource Library
+A curated, searchable collection of mental health resources.
+	•	Categories: Understanding Gaslighting, Coping Strategies, Setting Boundaries, Finding Professional Help, Self-Care, Healthy Communication
+	•	Resource cards: Title, description, type tag (Article/Video/Hotline/App), external link, bookmark
+	•	Emergency Resources Banner: Always-visible crisis hotline numbers (988, Crisis Text Line)
+	•	Bookmarking to user profile for quick access
+
+5.8 User Profile & Settings
+	•	Profile editing: Display name, avatar, email
+	•	Notification preferences: Optional weekly pattern report email
+	•	Data management: Export JSON, delete account and all data
+	•	Theme toggle: Light/Dark mode with system preference detection
+	•	Privacy controls: Toggle stored vs. ephemeral analysis
+
+5.9 About / Methodology Page
+	•	Plain-English explanation of RoBERTa and why it was chosen
+	•	Training data sources and provenance
+	•	Evaluation methodology: Sentiment Flip Test + Contextual Consistency Audit
+	•	Model limitations and confidence thresholds
+	•	Team bios and hackathon context
+	•	GitHub repository link
+
+5.10 Bonus Features (Hackathon Differentiators)
+These features go beyond core scope and serve as wow-factors for judges.
+5.10.1 Anonymous Community Feed
+An opt-in, anonymous feed where users share analyzed messages to normalize the experience. Users upvote with a “You’re Not Alone” reaction. Moderated via content filters. Builds community and reduces isolation.
+5.10.2 Browser Extension Teaser
+A landing section showing a future Chrome extension for in-context analysis on iMessage, WhatsApp Web, Instagram DMs, and Slack. Even as a mock-up, this demonstrates product vision and extensibility.
+5.10.3 Therapist Shareable Report
+One-click PDF report summarizing toxicity patterns, timeline, and severity scores. Bridges the gap between AI detection and professional support.
+5.10.4 Tone Rewriter
+After detecting a toxic message, rewrite the same sentiment in a healthy, direct way. Educational feature teaching users what healthy communication looks like.
+5.10.5 Gamified Safety Score
+Personal Safety Score (0–100) that improves as users engage with resources, log moods, and build healthier patterns. Achievement badges: Boundary Builder, Pattern Spotter, Self-Advocate. Gamification increases retention.
+
+6. UI/UX Design Specification
+6.1 Design Philosophy
+The design must feel warm, trustworthy, and human. Think of it as a cross between a meditation app and a sophisticated analytics platform. The goal: make users feel safe sharing vulnerable information.
+6.2 Visual Identity
+Element
+Specification
+Primary Font
+DM Sans (headings) + Outfit or Source Sans 3 (body)
+Color Palette
+Deep Navy (#1A1A2E), Coral (#E94560), Teal (#16C79A), Warm Gray (#F5F5F5), Midnight (#0F3460)
+Border Radius
+12px cards, 8px inputs, 24px buttons (pill shape)
+Shadows
+Layered box-shadows with warm tones
+Iconography
+Lucide React icons, 1.5px stroke weight
+Illustrations
+Abstract geometric shapes representing clarity and protection (shield motifs)
+6.3 Responsive Breakpoints
+Breakpoint
+Width
+Layout
+Mobile
+<640px
+Single column, bottom nav, full-width cards
+Tablet
+640–1024px
+Two-column grid, sidebar collapses
+Desktop
+>1024px
+Full sidebar nav, three-column dashboard
+6.4 Animations
+	•	Page transitions: Fade-in with vertical slide (200ms ease-out)
+	•	Button hover: Scale(1.02) + shadow deepening
+	•	Analysis loading: Pulsing shield with rotating ring
+	•	Results reveal: Staggered card entry (100ms delay between cards)
+	•	Scroll-triggered animations via Intersection Observer
+
+7. NLP Evaluation Plan
+7.1 Sarcastic Sentiment Flip Test
+Stress test using 100 curated positive-worded insults. Measures whether the model correctly identifies these as toxic rather than sincere. Target: >85% correct classification.
+7.2 Contextual Consistency Audit
+Evaluates gaslighting pattern detection across 5-sentence sliding windows. Tests whether the model identifies escalating manipulation across multiple messages. Target: >80% pattern detection accuracy.
+7.3 Evaluation Metrics
+Metric
+Target
+Rationale
+Per-label F1 Score
+>0.80
+Balanced precision/recall per category
+Macro-Averaged F1
+>0.78
+Overall model performance
+Sentiment Flip Accuracy
+>85%
+Sarcasm-disguised-as-positive stress test
+Pattern Detection Recall
+>80%
+Gaslighting over conversation windows
+Inference Latency (p95)
+<500ms
+Real-time user experience
+
+8. Deployment & Infrastructure
+8.1 Railway Configuration
+	•	Framework: Vite (React) with npm run build
+	•	Env vars: VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY, VITE_API_URL
+	•	Custom domain configuration
+	•	Auto-deploy from GitHub main branch
+8.2 Render API Configuration
+	•	Docker container with Python FastAPI serving RoBERTa
+	•	GPU recommended; CPU fallback for hackathon
+	•	CORS configured for Railway frontend origin
+	•	Rate limiting: 60 requests/minute per user
+8.3 Supabase Configuration
+	•	Row Level Security (RLS) on all tables
+	•	Auth: Email/Password + Google OAuth
+	•	Storage bucket for screenshots (5MB limit)
+	•	Edge Functions for OCR and report generation
+
+9. Risks & Mitigations
+Risk
+Severity
+Mitigation
+Model misclassification causing false reassurance
+High
+Disclaimers that AI is not a substitute for professional help; confidence thresholds
+User emotional distress from results
+High
+Empathetic UI copy; crisis resources always visible; opt-in severity warnings
+Render API latency during demo
+Medium
+Client-side caching; pre-computed demo examples; graceful loading states
+Supabase free tier limits
+Low
+Efficient queries; pagination; cleanup old sessions
+Privacy concerns with sensitive text
+High
+Ephemeral analysis option; clear privacy policy; full data deletion
+
+10. Success Metrics
+10.1 Hackathon Demo
+	•	Live demo completes full analysis in <3 seconds
+	•	All 4 classification labels demonstrated with high-confidence examples
+	•	Sanity Check delivers contextually appropriate validations
+	•	Pattern detection works across a 5-message conversation
+	•	UI is fully responsive with polished design
+10.2 Post-Hackathon (If Continued)
+	•	User sign-ups in first week
+	•	Average analyses per user per session
+	•	Resource library click-through rate
+	•	7-day and 30-day retention
+	•	NPS from feedback surveys
+
+11. Implementation Timeline
+Optimized for a 48–72 hour hackathon sprint with parallel workstreams.
+Phase
+Duration
+Deliverables
+Phase 1: Foundation
+Hours 0–8
+Supabase schema + auth, Railway init, Render health check, React boilerplate
+Phase 2: Core Analysis
+Hours 8–20
+Analysis page + API integration, Results display, Sanity Check module
+Phase 3: Landing + Auth
+Hours 20–32
+Landing page with live demo, Auth flow, Dashboard
+Phase 4: Features
+Hours 32–44
+Conversation mode, Pattern insights, Resource library, History
+Phase 5: Polish
+Hours 44–56
+Animations, responsive testing, dark mode, error handling
+Phase 6: Demo Prep
+Hours 56–72
+Demo script, pre-loaded examples, testing, presentation, README
+
+12. Appendix
+12.1 API Request/Response Example
+Endpoint: POST /api/v1/analyze
+Request: { "text": "Oh wow, you actually managed to do that? I'm so proud of you." }
+Response: { "label": "sarcastic", "confidence": 0.92, "secondary_labels": [{"label": "passive_aggressive", "confidence": 0.34}], "sanity_check": "This message uses exaggerated praise to undermine your accomplishment..." }
+
+12.2 Classification Labels
+Label
+Definition
+Example
+Sincere
+Genuine communication with no hidden intent
+"I really appreciate your help with this."
+Sarcastic
+Uses irony or mock praise to convey the opposite
+"Oh sure, you're clearly the expert here."
+Passive-Aggressive
+Indirectly hostile while surface-level polite
+"No, it's fine. I'll just do everything myself."
+Gaslighting
+Manipulates recipient into questioning reality
+"That never happened. You're imagining things."
+
+12.3 References
+	•	Khodak, M., et al. “A Large Self-Annotated Corpus for Sarcasm.” (SARC Dataset)
+	•	Liu, Y., et al. “RoBERTa: A Robustly Optimized BERT Pretraining Approach.” (2019)
+	•	Van Hee, C., et al. “Automatic Detection of Cyberbullying in Social Media Text.”
+	•	Stern, R. “The Gaslight Effect.”
+
+End of Document

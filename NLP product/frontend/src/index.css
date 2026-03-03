@@ -1,28 +1,144 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Outfit:wght@300;400;500;600&display=swap');
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:      #111111;
-  --bg2:     #1a1a1a;
-  --bg3:     #222222;
-  --border:  #333333;
-  --text:    #e0e0e0;
-  --text-muted: #777777;
-  --accent:  #e0e0e0;
+  /* Core Colors */
+  --bg: #1A1A2E; /* Deep Navy */
+  --bg-card: #0F3460; /* Midnight */
+  --bg-input: #121226;
+  --bg-hover: #162442;
+  --border: #2D2D44;
+  
+  /* Accents */
+  --accent-coral: #E94560;
+  --accent-teal: #16C79A;
+  
+  /* Typography */
+  --text-main: #F5F5F5; /* Warm Gray */
+  --text-muted: #A0A0B0;
+  
+  /* Analysis Classes */
+  --sincere: #16C79A;
+  --sarcastic: #E94560;
+  --passive: #F39C12; /* Warning orange */
+  --gaslight: #8E44AD; /* Deep purple */
+  --sincere-bg: rgba(22, 199, 154, 0.15);
+  --sarcastic-bg: rgba(233, 69, 96, 0.15);
+  --passive-bg: rgba(243, 156, 18, 0.15);
+  --gaslight-bg: rgba(142, 68, 173, 0.15);
 
-  --sincere:            #e0e0e0;
-  --sarcastic:          #e0e0e0;
-  --passive:            #e0e0e0;
-  --gaslight:           #e0e0e0;
-  --sincere-bg:         #2a2a2a;
-  --sarcastic-bg:       #2a2a2a;
-  --passive-bg:         #2a2a2a;
-  --gaslight-bg:        #2a2a2a;
+  /* Geometry */
+  --radius-card: 12px;
+  --radius-input: 8px;
+  --radius-button: 24px;
 }
 
-html { font-family: 'Inter', system-ui, sans-serif; font-size: 16px; }
-body { background: var(--bg); color: var(--text); min-height: 100vh; }
-a { color: var(--text); text-decoration: underline; }
+html { 
+  font-family: 'Outfit', system-ui, sans-serif; 
+  font-size: 16px; 
+}
 
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--bg2); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+body { 
+  background: var(--bg); 
+  color: var(--text-main); 
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { 
+  color: var(--accent-teal); 
+  text-decoration: none; 
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: #1cf0ba;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { 
+  background: var(--bg-card); 
+  border-radius: 4px; 
+  border: 2px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--border); }
+
+/* Utility Classes */
+.card-shadow {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.card-shadow-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-shadow-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Buttons */
+.btn-primary {
+  background: var(--accent-coral);
+  color: white;
+  border: none;
+  border-radius: var(--radius-button);
+  padding: 12px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-primary:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(233, 69, 96, 0.3);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-main);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-button);
+  padding: 12px 24px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background: var(--bg-hover);
+  border-color: var(--text-muted);
+}
+
+/* Animations */
+@keyframes fadeInSlide {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeInSlide 0.4s ease-out forwards;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(22, 199, 154, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(22, 199, 154, 0); }
+  100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(22, 199, 154, 0); }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2s infinite;
+}
